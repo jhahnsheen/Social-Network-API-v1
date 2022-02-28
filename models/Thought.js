@@ -1,7 +1,7 @@
 // import Schema model from mongoose
 const { Schema, model } = require('mongoose');
-// import Reaction schema for linking
-const Reaction = require('./Reaction');
+// importing the getter function
+const dateGetter = require('../utils/dateGetter');
 
 // setup new schema according to instructions
 const thoughtSchema = new Schema(
@@ -15,13 +15,34 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: timeSet,
+      get: (dateStr) => dateGetter(dateStr),
     },
     username: {
       type: String,
       required: true,
     },
-    reactions: [Reaction],
+    reactions: [
+      {
+        reactionId: {
+          type: Schema.Types.ObjectId,
+          default: () => new Types.ObjectId(),
+        },
+        reactionBody: {
+          type: String,
+          required: true,
+          maxlength: 280,
+        },
+        username: {
+          type: String,
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+          get: (dateStr) => dateGetter(dateStr),
+        },
+      },
+    ],
   },
   {
     toJSON: {
@@ -31,23 +52,6 @@ const thoughtSchema = new Schema(
     id: false,
   },
 );
-
-// setup timeSet getter function
-function timeSet() {
-  const date = new Date(dateStr);
-  const d = date.getDate();
-  const m = date.getMonth()+1;
-  const y = date.getFullYear();
-  const min = date.getMinutes();
-  let h = date.getHours();
-  let ap = 'am';
-  if (h > 12) {
-    h -= 12;
-    ap = 'pm'
-  }
-
-  return `${m} ${d}th, ${y} at ${h}:${min}`;
-};
 
 // setup friendCount virtual
 thoughtSchema
