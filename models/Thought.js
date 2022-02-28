@@ -47,7 +47,7 @@ function timeSet() {
   }
 
   return `${m} ${d}th, ${y} at ${h}:${min}`;
-}
+};
 
 // setup friendCount virtual
 thoughtSchema

@@ -45,7 +45,7 @@ userSchema
   }
 );
 
-// initialize User schema
+// initialize User model
 const User = model('user', userSchema);
 // export User model
 module.exports = User;
