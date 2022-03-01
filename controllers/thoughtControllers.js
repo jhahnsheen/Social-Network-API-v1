@@ -23,7 +23,17 @@ module.exports = {
   // POST to create a new thought 
   newThought(req, res) {
     Thought.create(req.body)
-      .then((thought) => res.json(thought))
+      // .then((thought) => res.json(thought))
+      // .catch((err) => res.status(500).json(err));
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: 'No user with that username' })
+          : User.findOneAndUpdate(
+            { username: req.body.username },
+            { $addToSet: { thoughts: { _id: thought.id } } },
+            { runValidators: true, new: true }
+          )
+      )
       .catch((err) => res.status(500).json(err));
   },
   // PUT to update a thought by its _id
@@ -85,7 +95,7 @@ module.exports = {
         _id: req.params.thoughtId 
       },
       {
-        $pull: { reaction: { reactionId: req.body } }
+        $pull: { reaction: { _id: req.params.reactionId } }
       },
       {
         runValidators: true,

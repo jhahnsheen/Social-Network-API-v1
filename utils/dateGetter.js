@@ -39,5 +39,5 @@ const timeSet = (timestamp) => {
   return `${m} ${d}, ${y} at ${h}:${min}`;
 };
 
-module.exports = timeSet(timestamp);
+module.exports = timeSet();
 

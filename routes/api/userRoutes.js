@@ -14,8 +14,9 @@ const {
 // /api/users
 user.route('/')
   .get(getUsers)
+  .post(newUser);
+user.route('/:userId')
   .get(getOneUser)
-  .post(newUser)
   .put(updateUser)
   .delete(removeUser);
 // /api/users/:userId/friends/:friendId
