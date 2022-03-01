@@ -1,5 +1,5 @@
 // import Schema model from mongoose
-const { Schema, model } = require('mongoose');
+const { Schema, Types, model } = require('mongoose');
 // importing the getter function
 const dateGetter = require('../utils/dateGetter');
 

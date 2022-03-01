@@ -1,6 +1,6 @@
 // setup timeSet getter function
 // most of this was pulled from online
-const timeSet = (timestamp) => {
+module.exports = (timestamp) => {
   // create month object that translates the timestamp month into a string month
   const months = {
     0: 'January',
@@ -36,8 +36,6 @@ const timeSet = (timestamp) => {
     ap = 'pm'
   }
 
-  return `${m} ${d}, ${y} at ${h}:${min}`;
+  const format = `${m} ${d}, ${y} at ${h}:${min}`;
+  return format;
 };
-
-module.exports = timeSet();
-

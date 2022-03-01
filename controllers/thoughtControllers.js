@@ -5,9 +5,12 @@ const { Thought, User } = require('../models');
 module.exports = {
   // GET to get all thoughts
   getThoughts(req, res) {
-    Thought.find()
-      .then((thoughts) => res.json(thoughts))
-      .catch((err) => res.json(500).json(err));
+    Thought.find({})
+      .then((thoughts) => 
+        !thoughts
+          ? res.status(500).json({ message: 'something stinky going on'})
+          : res.json(thoughts))
+      .catch((err) => res.status(500).json(err));
   },
   // GET to get a single thought by its _id
   getOneThought(req, res) {
@@ -22,17 +25,21 @@ module.exports = {
   },
   // POST to create a new thought 
   newThought(req, res) {
+    console.log(req.body);
     Thought.create(req.body)
       // .then((thought) => res.json(thought))
       // .catch((err) => res.status(500).json(err));
-      .then((thought) =>
+      .then((thought) => {
+        console.log(thought);
         !thought
           ? res.status(404).json({ message: 'No user with that username' })
           : User.findOneAndUpdate(
             { username: req.body.username },
-            { $addToSet: { thoughts: { _id: thought.id } } },
+            { $addToSet: { thoughts: { _id: thought._id } } },
             { runValidators: true, new: true }
           )
+        return res.status(200).json({ message: 'Thought successfully posted' });
+      }
       )
       .catch((err) => res.status(500).json(err));
   },
@@ -102,11 +109,6 @@ module.exports = {
         new: true
       }
     )
-    .then((thought) =>
-        !thought
-          ? res.status(404).json({ message: 'No thought with that UD' })
-          : res.status(200).json({ message: 'Reaction successfully deleted' })
-      )
     .then((reaction) =>
       !reaction
         ? res.status(404).json({ message: 'No reaction with that UD' })
